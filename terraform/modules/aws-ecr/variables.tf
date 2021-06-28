@@ -1,6 +1,6 @@
 
-variable "repositories" {
-  type = list(string)
+variable "repository" {
+  type = string
 }
 
 variable "kms_key" {

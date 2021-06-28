@@ -15,15 +15,13 @@ resource "aws_ecr_repository" "this" {
   tags = merge(
     var.tags,
     {
-      Name = "rega-${each.key}"
+      Name = var.repository
     }
   )
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
-  for_each = toset(var.repositories)
-
-  repository = aws_ecr_repository.this[each.key].id
+  repository = aws_ecr_repository.this.id
 
   policy = <<POLICY
 {

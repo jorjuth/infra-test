@@ -1,6 +1,6 @@
 
 module "member_api_vpc" {
-  source = "./modules/vpc/"
+  source = "./modules/aws-vpc/"
 
   #vpc_cidr_shift = lookup(var.vpc_net_shift, terraform.workspace)
   vpc_cidr = lookup(var.vpc_network, terraform.workspace)
@@ -18,7 +18,7 @@ module "member_api_vpc" {
 }
 
 module "member_api_vpcendpoints" {
-  source = "./modules/vpcendpoints/"
+  source = "./modules/aws-vpcendpoints/"
 
   vpc     = module.member_api_vpc.vpc
   subnets = module.member_api_vpc.subnet_endpoints

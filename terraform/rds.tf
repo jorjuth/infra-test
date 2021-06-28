@@ -1,13 +1,18 @@
 
+resource "random_password" "dbpass" {
+  length  = 24
+  special = false
+}
+
 module "member_api_pgsql" {
-  source = "./modules/aurora-pgsql-cluster/"
+  source = "./modules/aws-rds/"
 
   rds_type = {
-    instance_class               = "db.r5.large"
-    engine                       = "aurora-postgresql"
-    version                      = "12.6"
-    family                       = "aurora-postgresql12"
-    parameter_group_name         = "pg12"
+    instance_class               = "db.t3.micro"
+    engine                       = "postgres"
+    version                      = "13.2"
+    family                       = "postgres13"
+    parameter_group_name         = "pg13"
     preferred_backup_window      = "00:30-02:00"
     backup_retention_period      = 14
     preferred_maintenance_window = "tue:02:15-tue:03:45"
@@ -27,4 +32,9 @@ module "member_api_pgsql" {
     id  = aws_kms_key.this.id
     arn = aws_kms_key.this.arn
   }
+
+  dbuser                = "memberapi"
+  dbpass                = random_password.dbpass.result
+  dbname                = "memberapi"
+  app_security_group_id = aws_security_group.ecs.id
 }

@@ -1,4 +1,10 @@
 
+variable "rds_cluster" {
+  description = "True is RDS cluster to be deployed"
+  type        = bool
+  default     = false
+}
+
 variable "rds_type" {
   description = "DB cluster parameters"
   type = object({
@@ -62,4 +68,24 @@ variable "cloudwatch_retention" {
   description = "Cloudwatch Logs - retention in days"
   type        = number
   default     = 0
+}
+
+variable "dbuser" {
+  description = "DB admin username"
+  type        = string
+}
+
+variable "dbpass" {
+  description = "DB admin password"
+  type        = string
+}
+
+variable "dbname" {
+  description = "DB name"
+  type        = string
+}
+
+variable "app_security_group_id" {
+  description = "App security group"
+  type        = string
 }
