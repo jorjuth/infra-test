@@ -2,6 +2,7 @@
 output "instance" {
   value = {
     endpoint = aws_db_instance.this[0].endpoint
+    address  = aws_db_instance.this[0].address
     username = aws_db_instance.this[0].username
     password = aws_db_instance.this[0].password
     port     = aws_db_instance.this[0].port

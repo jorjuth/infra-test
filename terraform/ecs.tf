@@ -31,7 +31,7 @@ resource "aws_iam_role" "ecs" {
 EOF
 }
 
-resource "aws_iam_role_policy" "ecs" {
+resource "aws_iam_role_policy" "ecs2" {
   name = aws_iam_role.ecs.name
   role = aws_iam_role.ecs.name
 
@@ -66,6 +66,7 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs.arn
+  task_role_arn            = aws_iam_role.ecs.arn
 
   cpu    = "256"
   memory = "512"
@@ -88,7 +89,7 @@ resource "aws_ecs_task_definition" "this" {
     "environment": [
       {
         "name": "DB_HOST",
-        "value": "${module.member_api_pgsql.instance.endpoint}"
+        "value": "${module.member_api_pgsql.instance.address}"
       },
       {
         "name": "PSQL_USER",
@@ -124,13 +125,25 @@ resource "aws_ecs_service" "this" {
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.this.arn
   desired_count   = 1
-  iam_role        = ""
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = module.member_api_vpc.subnet_app.*.id
-    security_groups = [aws_security_group.ecs.id]
+    subnets          = module.member_api_vpc.subnet_app.*.id
+    security_groups  = [aws_security_group.ecs.id]
+    assign_public_ip = false
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb.id
+    container_name   = var.project_prefix
+    container_port   = var.app_port
+  }
+
+  tags = merge(
+    var.common_tags,
+    {
+      Environment = terraform.workspace
+  })
 }
 
 resource "aws_security_group_rule" "this_sg" {
@@ -147,6 +160,12 @@ resource "aws_security_group_rule" "this_sg" {
       to_port                  = 443
       source_security_group_id = module.member_api_vpcendpoints.sg_vpc_endpoints_id
     }
+    "external ALB" = {
+      type                     = "ingress"
+      from_port                = var.app_port
+      to_port                  = var.app_port
+      source_security_group_id = aws_security_group.alb.id
+    }
   }
 
   security_group_id        = aws_security_group.ecs.id
@@ -156,6 +175,16 @@ resource "aws_security_group_rule" "this_sg" {
   to_port                  = each.value.to_port
   protocol                 = "tcp"
   source_security_group_id = each.value.source_security_group_id
+}
+
+resource "aws_security_group_rule" "s3" {
+  security_group_id = aws_security_group.ecs.id
+  type              = "egress"
+  description       = "S3 endpoints"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  prefix_list_ids   = [module.member_api_vpc.s3_vpc_endpoint.pl]
 }
 
 resource "aws_security_group" "ecs" {

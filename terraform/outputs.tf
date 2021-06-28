@@ -8,3 +8,7 @@ output "docker_commands" {
 docker push ${module.member_api_ecr.repository.repository_url}/${var.docker_image.name}:${var.docker_image.tag}
 EOF
 }
+
+output "alb_public_dns" {
+  value = aws_lb.alb.dns_name
+}

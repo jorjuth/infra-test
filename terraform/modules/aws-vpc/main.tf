@@ -60,7 +60,7 @@ resource "aws_subnet" "endpoints" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   cidr_block        = cidrsubnet(var.vpc_cidr, var.multi_az_cidr_shift, count.index)
 
-  map_public_ip_on_launch = var.map_public_ip_on_launch
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.tags,
@@ -77,7 +77,7 @@ resource "aws_subnet" "rds" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   cidr_block        = cidrsubnet(var.vpc_cidr, var.multi_az_cidr_shift, count.index + local.az_count)
 
-  map_public_ip_on_launch = var.map_public_ip_on_launch
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.tags,
@@ -94,7 +94,7 @@ resource "aws_subnet" "app" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
   cidr_block        = cidrsubnet(var.vpc_cidr, var.multi_az_cidr_shift, count.index + 2 * local.az_count)
 
-  map_public_ip_on_launch = var.map_public_ip_on_launch
+  map_public_ip_on_launch = false
 
   tags = merge(
     var.tags,
