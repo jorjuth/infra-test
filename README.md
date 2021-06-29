@@ -10,13 +10,13 @@
 * Investigation and tests provisioning NLB and API Gateway: 4h
 
 ### Simplified infrastructure:
-1 VPC:
-* private subnets for VPC endpoints, RDS and ECS instances - multi AZ
-* public subnet DMZ to host ALB - multi AZ
+* 1 VPC:
+** private subnets for VPC endpoints, RDS and ECS instances - multi AZ
+** public subnet DMZ to host ALB - multi AZ
 
-ECR repository
-ECS Fargate cluster
-RDS PostreSQL instance
+* ECR repository
+* ECS Fargate cluster
+* RDS PostreSQL instance
 Actually Aurora PostgreSQL 13.3 hasn't been released yet, neither PostgreSQL 13.3 is supported on RDS. RDS PostgreSQL 13.2 will be deployed for this usage.
 
 ### Improvements to be done:
