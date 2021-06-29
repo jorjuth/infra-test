@@ -10,9 +10,5 @@ EOF
 }
 
 output "alb_public_dns" {
-  value = aws_lb.alb_ext.dns_name
-}
-
-output "api_gateway_endpoint" {
-  value = aws_api_gateway_deployment.this.invoke_url
+  value = "http://${aws_lb.alb_ext.dns_name}:${var.app_port}"
 }
