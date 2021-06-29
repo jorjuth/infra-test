@@ -134,10 +134,24 @@ resource "aws_ecs_service" "this" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.alb.id
+    target_group_arn = aws_lb_target_group.alb_ext.id
     container_name   = var.project_prefix
     container_port   = var.app_port
   }
+
+  /*
+  load_balancer {
+    target_group_arn = aws_lb_target_group.alb_int.id
+    container_name   = var.project_prefix
+    container_port   = var.app_port
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.nlb.id
+    container_name   = var.project_prefix
+    container_port   = var.app_port
+  }
+  */
 
   tags = merge(
     var.common_tags,

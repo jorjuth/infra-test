@@ -3,3 +3,4 @@
 *.tfstate*
 
 *-ignore
+terraform/README.md
