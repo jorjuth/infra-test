@@ -11,8 +11,8 @@
 
 ### Simplified infrastructure:
 * 1 VPC:
-** private subnets for VPC endpoints, RDS and ECS instances - multi AZ
-** public subnet DMZ to host ALB - multi AZ
+    * private subnets for VPC endpoints, RDS and ECS instances - multi AZ
+    * public subnet DMZ to host ALB - multi AZ
 
 * ECR repository
 * ECS Fargate cluster
