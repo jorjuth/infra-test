@@ -42,6 +42,8 @@ standard_init_linux.go:228: exec user process caused: exec format error
 ```
 
 ### Installation notes
+Working version using ALB is in branch *master*. Non-working version using NLB and API Gateway is in branch *NLB*.
+
 Apply terraform plan:
 ```
 terraform init
